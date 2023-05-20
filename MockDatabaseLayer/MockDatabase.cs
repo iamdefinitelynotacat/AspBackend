@@ -6,28 +6,32 @@ namespace MockDatabaseLayer
     {
         private readonly Dictionary<Guid, T> valueDictionary = new();
 
-        public void AddOrUpdate(T element)
+        /// <inheritdoc/>
+        public void AddOrUpdate(T entity)
         {
-            if (valueDictionary.ContainsKey(element.Key))
+            if (valueDictionary.ContainsKey(entity.Key))
             {
-                valueDictionary[element.Key] = element;
+                valueDictionary[entity.Key] = entity;
             }
             else
             {
-                valueDictionary.Add(element.Key, element);
+                valueDictionary.Add(entity.Key, entity);
             }
         }
 
+        /// <inheritdoc/>
         public bool Contains(Func<T, bool> predicate)
         {
             return valueDictionary.Values.Any(predicate);
         }
 
+        /// <inheritdoc/>
         public bool Delete(Guid key)
         {
             return valueDictionary.Remove(key, out _);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<T> GetValues()
         {
             return valueDictionary.Values;

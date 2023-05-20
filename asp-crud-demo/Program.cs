@@ -12,13 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
 builder.Services.AddSingleton<IDatabase<TaskEntity>>(new MockDatabase<TaskEntity>());
 builder.Services.AddSingleton<IEntityValidation<TaskEntity>, TaskEntityValidation>();
 
 var app = builder.Build();
-
 
 //services cors
 app.UseCors(builder => builder

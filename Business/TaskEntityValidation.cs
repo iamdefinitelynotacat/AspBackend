@@ -5,6 +5,7 @@ namespace Validation
 {
     public class TaskEntityValidation : IEntityValidation<TaskEntity>
     {
+        /// <inheritdoc/>
         public (bool isValid, string errorMessage) IsValid(IDatabase<TaskEntity> database, TaskEntity element)
         {
             if (database.Contains(x => x.Name == element.Name && x.Key != element.Key))

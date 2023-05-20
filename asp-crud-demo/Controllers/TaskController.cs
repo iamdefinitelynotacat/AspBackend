@@ -1,8 +1,6 @@
 ﻿using DTOs;
 using Interfaces;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Validation;
 
 namespace asp_crud_demo.Controllers
 {
@@ -20,14 +18,23 @@ namespace asp_crud_demo.Controllers
             this.validation = validation;
         }
 
+        /// <summary>
+        /// Gets all TaskEntities from DB.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<TaskEntity[]> Get()
         {
             return database.GetValues().ToArray();
         }
 
+        /// <summary>
+        /// Adds or updates TaskEntity to DB
+        /// </summary>
+        /// <param name="entity">The entity to add or update.</param>
+        /// <returns>OK or BadRequest.</returns>
         [HttpPost]
-        public ActionResult<bool> Post([FromBody] TaskEntity entity)
+        public ActionResult Post([FromBody] TaskEntity entity)
         {
             lock (lockObject)
             {
@@ -44,8 +51,13 @@ namespace asp_crud_demo.Controllers
             }
         }
 
+        /// <summary>
+        /// Deteles the entity by key.
+        /// </summary>
+        /// <param name="key">Key of en entity to be deleted.</param>
+        /// <returns>OK or BadRequest.</returns>
         [HttpDelete]
-        public ActionResult<bool> Delete(Guid key)
+        public ActionResult Delete(Guid key)
         {
             var deletionResult = database.Delete(key);
             return deletionResult ? Ok() : BadRequest($"No Task with key:{key} found");
