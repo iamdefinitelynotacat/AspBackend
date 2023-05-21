@@ -21,7 +21,7 @@ namespace asp_crud_demo.Controllers
         /// <summary>
         /// Gets all TaskEntities from DB.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task Entities.</returns>
         [HttpGet]
         public ActionResult<TaskEntity[]> Get()
         {
