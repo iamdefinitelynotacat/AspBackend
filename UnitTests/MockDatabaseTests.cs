@@ -1,20 +1,15 @@
-using asp_crud_demo.Controllers;
-using DTOs;
+﻿using DTOs;
 using MockDatabaseLayer;
-using Validation;
 
 namespace UnitTests
 {
     [TestClass]
-    public class TaskControllerTests
+    public class MockDatabaseTests
     {
         [TestMethod]
-        public void TestGET()
+        public void TestAddOrUpdateAdd()
         {
             var db = new MockDatabase<TaskEntity>();
-            var validation = new TaskEntityValidation();
-            var controller = new TaskController(db, validation);
-
             var t = new TaskEntity
             {
                 Key = Guid.NewGuid(),
@@ -24,35 +19,6 @@ namespace UnitTests
             };
 
             db.AddOrUpdate(t);
-
-            var getResult = controller.Get();
-            Assert.IsNotNull(getResult);
-            Assert.IsNotNull(getResult.Value);
-            Assert.AreEqual(1, getResult.Value.Length);
-            var tresult = getResult.Value[0];
-            Assert.IsNotNull(tresult);
-            Assert.AreEqual(t.Key, tresult.Key);
-            Assert.AreEqual(t.Name, tresult.Name);
-            Assert.AreEqual(t.Priority, tresult.Priority);
-            Assert.AreEqual(t.Status, tresult.Status);
-        }
-
-        [TestMethod]
-        public void TestPOSTAdd()
-        {
-            var db = new MockDatabase<TaskEntity>();
-            var validation = new TaskEntityValidation();
-            var controller = new TaskController(db, validation);
-
-            var t = new TaskEntity
-            {
-                Key = Guid.NewGuid(),
-                Name = "Test",
-                Priority = 1,
-                Status = Status.InProgress
-            };
-
-            controller.Post(t);
 
             var tresult = db.GetValues().Single();
 
@@ -64,11 +30,9 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestPOSTUpdate()
+        public void TestAddOrUpdateUpdate()
         {
             var db = new MockDatabase<TaskEntity>();
-            var validation = new TaskEntityValidation();
-            var controller = new TaskController(db, validation);
 
             var t0 = new TaskEntity
             {
@@ -88,7 +52,7 @@ namespace UnitTests
                 Status = Status.Completed
             };
 
-            controller.Post(t);
+            db.AddOrUpdate(t);
 
             var tresult = db.GetValues().Single();
 
@@ -100,11 +64,9 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestDELETE()
+        public void TestContains()
         {
             var db = new MockDatabase<TaskEntity>();
-            var validation = new TaskEntityValidation();
-            var controller = new TaskController(db, validation);
 
             var t = new TaskEntity
             {
@@ -116,9 +78,54 @@ namespace UnitTests
 
             db.AddOrUpdate(t);
 
-            controller.Delete(t.Key);
+            var res = db.Contains(x => x.Key == t.Key);
+            Assert.IsTrue(res);
+
+            var falseRes = db.Contains(x => x.Name == "Test2");
+            Assert.IsFalse(falseRes);
+        }
+
+        [TestMethod]
+        public void TestDelete()
+        {
+            var db = new MockDatabase<TaskEntity>();
+
+            var t = new TaskEntity
+            {
+                Key = Guid.NewGuid(),
+                Name = "Test",
+                Priority = 1,
+                Status = Status.InProgress
+            };
+
+            db.AddOrUpdate(t);
+
+            db.Delete(t.Key);
 
             Assert.AreEqual(0, db.GetValues().Count());
+        }
+
+        [TestMethod]
+        public void TestGetValues()
+        {
+            var db = new MockDatabase<TaskEntity>();
+
+            var t = new TaskEntity
+            {
+                Key = Guid.NewGuid(),
+                Name = "Test",
+                Priority = 1,
+                Status = Status.InProgress
+            };
+
+            db.AddOrUpdate(t);
+
+            var tresult = db.GetValues().Single();
+            Assert.IsNotNull(tresult);
+            Assert.AreEqual(t.Key, tresult.Key);
+            Assert.AreEqual(t.Name, tresult.Name);
+            Assert.AreEqual(t.Priority, tresult.Priority);
+            Assert.AreEqual(t.Status, tresult.Status);
         }
     }
 }

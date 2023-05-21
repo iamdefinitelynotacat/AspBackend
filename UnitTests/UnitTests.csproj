@@ -16,4 +16,8 @@
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\asp-crud-demo\asp-crud-demo.csproj" />
+  </ItemGroup>
+
 </Project>
