@@ -40,6 +40,22 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void TestNameEmptyExpectFail()
+        {
+            var db = new MockDatabase<TaskEntity>();
+
+            var valid = new TaskEntityValidation();
+            var t = new TaskEntity
+            {
+                Key = Guid.NewGuid(),
+                Name = " ",
+                Priority = 1,
+                Status = Status.InProgress
+            };
+            Assert.IsFalse(valid.IsValid(db, t).isValid);
+        }
+
+        [TestMethod]
         public void TestNameValidationExpectSuccess()
         {
             var db = new MockDatabase<TaskEntity>();
